@@ -1,0 +1,130 @@
+/**
+ * All of the CSS for your public-facing functionality should be
+ * included in this file.
+ */
+ #wc-customizer{
+    margin-bottom: 50px;
+}
+.editinfo_tabs {
+   display: flex;
+   flex-wrap: wrap;
+   max-width: 400px;
+   font-family: sans-serif;
+}
+
+.editinfo_tabs__label {
+   font-weight: bold !important;
+   padding: 10px 16px;
+   padding-left: 0;
+   cursor: pointer;
+   text-align: left;
+   user-select: none;
+   font-size: 18px;
+}
+
+.editinfo_tabs__radio {
+   display: none;
+}
+
+.editinfo_tabs__content {
+   order: 1;
+   width: 100%;
+   margin-top: 30px;
+   line-height: 1.5;
+   font-size: 0.9em;
+   display: none;
+}
+
+.editinfo_tabs__radio:checked+.editinfo_tabs__label {
+   color: #b5b5b5;
+   border-bottom: 2px solid #b5b5b5;
+}
+.editinfo_tabs__content label{
+   color: #b5b5b5 !important;
+}
+.editinfo_tabs__radio:checked+.editinfo_tabs__label+.editinfo_tabs__content {
+   display: initial;
+}
+
+.info_field input {
+   padding: 5px 10px!important;
+   background: #17171770!important;
+   height: 50px !important;
+   outline: 0px !important;
+   border: .1px solid #8a1c47 !important;
+   border-radius: 5px !important;
+}
+
+.info_field select.postform.sp-cust-select.chosen-select {
+   padding: 2px;
+   height: fit-content;
+}
+.editinfo_tabs__content form .info_field {
+   display: flex !important;
+   flex-direction: column !important;
+   margin-bottom: 15px;
+}
+
+.editinfo_tabs__content input.submit-button {
+   padding: 10px 20px;
+   cursor: pointer;
+   color: #fff;
+   background: #005e67 !important;
+   font-weight: 500 !important;
+   margin-top: 20px;
+}
+.chosen-select {
+   width: 100%;
+}
+
+.image_wrapper {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   gap: 10px;
+   margin-top: 22px;
+   width: 100%;
+   height: fit-content;
+   padding: 10px;
+   border-radius: 5px;
+   margin-bottom: 20px;
+   background: #ffffff4f;
+}
+.profile-img,.logo-img {
+   width: 130px;
+   height: 130px;
+   background: transparent;
+   border-radius: 50%;
+   overflow: hidden;
+   border: 1px solid red;
+}
+.profile-img img,.logo-img img {
+   width: 100% !important;
+   height: 100% !important;
+}
+
+input#profile_photo,input#team_logo {
+   width: 1px;
+   height: 1px;
+   display: inherit;
+   padding: 0px !important;
+   margin: 0px !important;
+   overflow: hidden;
+   border: none !important;
+   opacity: 0;
+}
+.uploadimg {
+   height: fit-content;
+   text-align: center;
+}
+
+.uploadimg label {
+   cursor: pointer;
+   padding: 5px 10px;
+   border: 1px solid;
+   border-radius: 3px;
+   margin-bottom: 0;
+   color: #51dfff;
+   font-weight: 500;
+}
