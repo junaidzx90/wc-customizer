@@ -1,0 +1,105 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+ body{
+    background: linear-gradient(#641533, #a52757);
+    background: -webkit-linear-gradient(#641533, #a52757);
+    background: -moz-linear-gradient(#641533, #a52757);
+ }
+ #wp_login {
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+#wp_login .logo {
+    width: 300px;
+    text-align: center;
+    margin: 12px;
+}
+#wp_login .logo a:focus{
+    outline: none;
+    border: none;
+    box-shadow: none !important;
+}
+.logo a img{
+    width: 200px;
+}
+.login_form {
+    padding: 30px 12px;
+    border: 1px solid #ddd;
+    background: linear-gradient(rgb(48, 10, 25), #35083d);
+    background: -webkit-linear-gradient(rgb(48, 10, 25), #35083d);
+    background: -moz-linear-gradient(rgb(48, 10, 25), #35083d);
+    border-radius: 3px;
+}
+.login_form form{
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.login_form form .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.login_form form .inputs label{
+    color: #fff;
+    user-select: none;
+}
+.login_form form .inputs input#pubgm_id,.login_form form .inputs input#pass,.login_form form .inputs input[type="submit"]{
+    color: #fff;
+    background-color: transparent;
+    height: 38px;
+}
+.login_form form .inputs input:focus {
+    outline-color: transparent;
+    border-color: #a52757;
+    box-shadow: none;
+}
+
+.login_form form .inputs input[type="submit"] {
+    cursor: pointer;
+    border: none;
+    background-color: #a32656;
+    border-radius: 3px;
+}
+
+.login_form form .inputs input[type="submit"]:hover{
+    background-color: #661634;
+    transition: .3s;
+}
+.dont-have-account {
+    margin-top: 5px;
+    color: #a39426;
+}
+.dont-have-account a{
+    color: #959595;
+}
+span.alert {
+    display: block;
+    width: 300px;
+    padding: 8px 11px;
+    background: #310a1c52;
+    margin-bottom: 9px;
+    border-radius: 3px;
+    border-left: 4px solid #ff5e00;
+    border-top: 1px solid #ff5e00;
+    border-bottom: 1px solid #ff5e00;
+    color: #c3c2c1;
+}
+strong.error_code {
+    color: #ffdfee;
+}
+
+.rememberme {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0px;
+}

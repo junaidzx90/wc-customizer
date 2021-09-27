@@ -60,7 +60,7 @@ class Wc_Customizer_Admin {
 	 */
 	public function enqueue_styles() {
 
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wc-customizer-admin.css', array(), $this->version, 'all' );
+		//wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wc-customizer-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -71,7 +71,7 @@ class Wc_Customizer_Admin {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wc-customizer-admin.js', array( 'jquery' ), $this->version, false );
+		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wc-customizer-admin.js', array( 'jquery' ), $this->version, false );
 
 	}
 
@@ -114,6 +114,9 @@ class Wc_Customizer_Admin {
 		// Player access
 		add_settings_field( 'role_for_player_access', 'Player access', [$this,'role_for_player_access_cb'], 'wc_customizer_settings_page', 'wc_customizer_settings_section');
 		register_setting( 'wc_customizer_settings_section', 'role_for_player_access');
+		// login_logo
+		add_settings_field( 'login_logo', 'Login page logo', [$this,'login_logo_cb'], 'wc_customizer_settings_page', 'wc_customizer_settings_section');
+		register_setting( 'wc_customizer_settings_section', 'login_logo');
 	}
 
 	function opt_customizer_html(){
@@ -145,6 +148,10 @@ class Wc_Customizer_Admin {
 		echo '<option value="all">All</option>';
 		echo $this->wp_dropdown_roles(get_option( 'role_for_player_access' ));
 		echo '</select>';
+	}
+
+	function login_logo_cb(){
+		echo '<input class="widefat" type="url" value="'.get_option('login_logo').'" placeholder="Logo url" name="login_logo">';
 	}
 
 	function user_unique_id_generator( $total_rows, $myorder_obj ) {
@@ -200,5 +207,145 @@ class Wc_Customizer_Admin {
 		}
 	}
 
+	function login_page_scripts() {
+		$registration = false;
+		if(isset($_GET['action']) && $_GET['action'] == 'register'){
+			$registration = true;
+		}
+		if(!$registration){
+			wp_enqueue_style( 'customizer-login', plugin_dir_url( __FILE__ ) . 'css/wc-customizer-login.css' );
+			wp_enqueue_script( 'jquery' );
+			wp_enqueue_script( 'customizer-login', plugin_dir_url( __FILE__ ) . 'js/wc-customizer-login.js' );
+		}
+	}
+
+	function wc_customiser_login_access($user_id){
+		wp_clear_auth_cookie();
+		wp_set_current_user($user_id);
+		wp_set_auth_cookie($user_id);
+		
+		return true;
+	}
 	
+	function login_page_processing(){
+		global $wc_errors;
+		if(isset($_POST['wc_login'])){
+			if(isset($_POST['pubgm_id']) && !empty($_POST['pubgm_id']) && isset($_POST['password']) && !empty($_POST['password'])){
+				$pubgm_id = intval($_POST['pubgm_id']);
+				$password = sanitize_text_field($_POST['password']);
+
+				try {
+					global $wpdb;
+					$user_id = $wpdb->get_var("SELECT user_id FROM {$wpdb->prefix}usermeta WHERE meta_key = 'pubgmid' AND meta_value = $pubgm_id");
+					$user_id = intval($user_id);
+					
+					$user = get_user_by( 'ID', $user_id );
+
+					if ( wp_check_password( $password, $user->user_pass, $user->ID ) ) {
+
+						if(isset($_POST['remember_me'])){
+							setcookie('pubgm_id', $pubgm_id, time() + (10 * 365 * 24 * 60 * 60), '/');
+							setcookie('password', $password, time() + (10 * 365 * 24 * 60 * 60), '/');
+						}
+						
+						$this->wc_customiser_login_access($user->ID);
+
+						if(is_user_logged_in(  )){
+							if(current_user_can( 'administrator' )){
+								wp_safe_redirect( home_url( '/wp-admin' ) );
+								exit;
+							}else{
+								wp_safe_redirect( home_url( '/arena' ) );
+								exit;
+							}
+						}
+						
+					}else{
+						$wc_errors = 'Invalid credentials.';
+					}
+
+				} catch (Exception $e) {
+					$wc_errors = $e->getMessage();
+				}
+
+			}else{
+				$wc_errors = 'Missing required fields.';
+			}
+		}
+	}
+
+	function login_head_login_page(){
+		global $wc_errors;
+		$registration = false;
+		if(isset($_GET['action']) && $_GET['action'] == 'register'){
+			$registration = true;
+		}
+
+		if(!$registration){
+		?>
+			<!DOCTYPE html>
+			<html lang="en">
+			<head>
+				<meta charset="UTF-8">
+				<meta http-equiv="X-UA-Compatible" content="IE=edge">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title><?php echo get_bloginfo( 'name' ) ?></title>
+			</head>
+			<body>
+				<div id="wp_login">
+					<div class="logo">
+						<?php $logo_url = get_option('login_logo') ?>
+						<a href="<?php echo esc_url(get_site_url( '/' )) ?>">
+							<img src="<?php echo esc_url( $logo_url ); ?>" alt="logo">
+						</a>
+					</div>
+
+					<?php
+					if(!empty($wc_errors)){
+						echo "<span class=\"alert\"><strong class=\"error_code\">ERROR: </strong> $wc_errors</span>";
+					}
+					?>
+
+					<div class="login_form">
+
+						<form method="post">
+							<?php
+							$pubgm_id = '';
+							$password = '';
+							if(isset($_COOKIE['pubgm_id'])){
+								$pubgm_id = $_COOKIE['pubgm_id'];
+							}
+							if(isset($_COOKIE['password'])){
+								$password = $_COOKIE['password'];
+							}
+							?>
+							<div class="inputs">
+								<label for="pubgm_id">PubgmId</label>
+								<input type="number" name="pubgm_id" id="pubgm_id" value="<?php echo $pubgm_id ?>">
+							</div>
+							<div class="inputs">
+								<label for="pass">Password</label>
+								<input type="password" name="password" id="pass" value="<?php echo $password ?>">
+							</div>
+							<div class="inputs">
+								<div class="rememberme"><label for="remember_me"> Remember me</label>
+								<input type="checkbox" name="remember_me" id="remember_me"></div>
+							</div>
+
+							<div class="inputs">
+								<input type="submit" name="wc_login" value="Login">
+							</div>
+						</form>
+						
+						<div class="dont-have-account">
+							<span>Don't have account? <a href="<?php echo esc_url(wp_registration_url()) ?>">Sign up</a></span>
+						</div>
+					</div>
+				</div>
+			</body>
+			</html>
+			<?php
+			exit;
+		}
+	}
 }

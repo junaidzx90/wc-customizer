@@ -37,6 +37,8 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'WC_CUSTOMIZER_VERSION', '1.0.0' );
 
+$wc_errors = '';
+
 if ( !function_exists( 'sp_array_value' ) ) {
 	function sp_array_value( $arr = array(), $key = 0, $default = null ) {
 		return ( isset( $arr[ $key ] ) ? $arr[ $key ] : $default );

@@ -162,6 +162,11 @@ class Wc_Customizer {
 		$this->loader->add_action( 'admin_init', $plugin_admin,'prevent_admin_access_non_admin_users', 99);
 		$this->loader->add_action( 'init', $plugin_admin,'prevent_toolbar_non_admin_users', 99);
 
+		$this->loader->add_action( 'login_head', $plugin_admin,'login_head_login_page', 99);
+		$this->loader->add_action( 'login_enqueue_scripts', $plugin_admin, 'login_page_scripts' );
+		$this->loader->add_filter( 'init', $plugin_admin, 'login_page_processing');
+
+
 	}
 
 	/**
